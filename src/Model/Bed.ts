@@ -13,8 +13,12 @@ const bedSchema = new mongoose.Schema({
         type:Boolean,
         required : [true, "No status Provided"]
     },
-    patient:{
+    patientData:{
         type: Object , 
+        required: false
+    },
+    patientID:{
+        type: String , 
         required: false
     },
     admission_date:{

@@ -7,7 +7,7 @@ const api = express();
 
 api.get('/auth', (req: Request, res: Response) => {
     try {
-        request.get(`http://169.254.2.184:5000/read`, async function (error, response, body) {
+        request.get(`http://169.254.2.184:8000/read`, async function (error, response, body) {
             if (!error && response.statusCode === 200) {
                 const body = JSON.parse(response.body);
                 res.status(200).json(body);
@@ -77,6 +77,55 @@ api.post('/patient', async (req: Request, res: Response) => {
     }
 });
 
+api.post('/addmedication', async (req: Request, res: Response) => {
+    const data : any = req.body;
+    const patient:any = await Patient.findOne({
+        id: data?.id
+    })
+    if (!patient) {
+        res.status(400).json({ msg: "Patient Does't Exist" });
+    }
+    else {
+        patient.medication.push(data.data)
+        patient.save()
+        res.status(200).json({
+            msg: "medication Added Successfully",
+        });
+    }
+})
+
+api.post('/getpatient/', async (req: Request, res: Response) => {
+    const patient:any = await Patient.findOne({
+        id: req.body.id
+    })
+    if (!patient) {
+        res.status(400).json({ msg: "Patient Does't Exist" });
+    }
+    else {
+        res.status(200).json({
+            patient:patient,
+        });
+    }
+})
+
+api.post('/addhistory', async (req: Request, res: Response) => {
+    const data : any = req.body;
+    const patient:any = await Patient.findOne({
+        id: data?.id
+    })
+    if (!patient) {
+        res.status(400).json({ msg: "Patient Does't Exist" });
+    }
+    else {
+        patient.medicationHistory.push(data.data)
+        patient.save()
+        res.status(200).json({
+            msg: "History Added Successfully",
+        });
+    }
+})
+
+
 api.post('/addbed', async (req: Request, res: Response) => {
     const bed: any = req.body;
     const patient: any = await Patient.findOne({
@@ -86,7 +135,8 @@ api.post('/addbed', async (req: Request, res: Response) => {
         room_number: bed.room_number,
         bed_number: bed.bed_number,
         status: bed.status,
-        patient: patient ? patient : {},
+        patientData: patient ? patient: {},
+        patientID: patient ? patient.id : "",
         admission_date: bed.admission_date
     })
     if (!patient) {

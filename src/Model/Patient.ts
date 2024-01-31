@@ -42,16 +42,14 @@ const patientSchema = new mongoose.Schema({
         type: String,
         required: [true, "Please enter your attending_nurse"],
     },
-    // medication:{
-    //     type: mongoose.Schema.Types.ObjectId, 
-    //     ref: 'Medication',
-    //     required: [true,"No medication Provided"]
-    // },
-    // medicationHistory:{
-    //     type: mongoose.Schema.Types.ObjectId, 
-    //     ref: 'MedicationHistory',
-    //     required: [true,"No medication Provided"]
-    // }
+    medication:{
+        type: Array, 
+        required: [false,"No medication Provided"]
+    },
+    medicationHistory:{
+        type: Array, 
+        required: [false,"No medication Provided"]
+    }
 })
 
 export default mongoose.model("Patient", patientSchema);
